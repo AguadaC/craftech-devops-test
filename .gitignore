@@ -1,0 +1,4 @@
+# Ignore local files and notes not meant to be committed
+challenge-1-network-diagram/notes.md
+challenge-1-network-diagram/notes_es.md
+challenge-1-network-diagram/description_es.md
