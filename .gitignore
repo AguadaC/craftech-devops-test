@@ -2,3 +2,12 @@
 challenge-1-network-diagram/notes.md
 challenge-1-network-diagram/notes_es.md
 challenge-1-network-diagram/description_es.md
+
+challenge-2-docker-deployment/notes.md
+challenge-2-docker-deployment/notes_es.md
+challenge-2-docker-deployment/step_by_step_es.md
+challenge-2-docker-deployment/step_by_step.md
+
+# Environment files
+.env
+.env.*
