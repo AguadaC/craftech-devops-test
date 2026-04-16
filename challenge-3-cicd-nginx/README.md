@@ -1,10 +1,10 @@
-# Challenge 3 - CI/CD (Nginx)
+# Challenge 3 - CI (Nginx)
 
 ## Goal
 
 - Dockerize an Nginx container serving a custom `index.html`.
 - Implement CI with GitHub Actions so that each change to `index.html`
-  triggers a new image build and pushes it to a registry.
+  triggers a new image build, smoke test, and push to a registry.
 
 ## Files
 
@@ -55,13 +55,9 @@ To pull it:
 docker pull ghcr.io/<owner>/<repo>/challenge-3-nginx:latest
 ```
 
-Note: if the package (Package) is private, you will need to authenticate.
+This repository is public, so pulling should work without authentication.
 
-Example login to GHCR (replace `GITHUB_USERNAME` and `GITHUB_TOKEN`):
-
-```bash
-echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_USERNAME" --password-stdin
-```
+Note: GHCR image names must be lowercase. If your GitHub owner/repo contains uppercase characters, use the lowercase form in the image name.
 
 Then you can run the image directly:
 
@@ -84,7 +80,7 @@ Open:
 From `challenge-3-cicd-nginx/`:
 
 ```bash
-export GITHUB_REPOSITORY=<owner>/<repo>
+export GITHUB_REPOSITORY_LOWER=<owner>/<repo>
 docker compose pull
 docker compose up
 ```
