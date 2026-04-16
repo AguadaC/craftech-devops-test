@@ -7,6 +7,9 @@ on:
       - "challenge-3-cicd-nginx/Dockerfile"
       - ".github/workflows/challenge-3-ci.yml"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: read
   packages: write
@@ -22,6 +25,7 @@ jobs:
       - name: Compute image tag
         run: |
           echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+          echo "IMAGE_REPO=ghcr.io/${GITHUB_REPOSITORY,,}/challenge-3-nginx" >> "$GITHUB_ENV"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -63,5 +67,5 @@ jobs:
           context: ./challenge-3-cicd-nginx
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/challenge-3-nginx:latest
-            ghcr.io/${{ github.repository }}/challenge-3-nginx:sha-${{ env.SHORT_SHA }}
+            ${{ env.IMAGE_REPO }}:latest
+            ${{ env.IMAGE_REPO }}:sha-${{ env.SHORT_SHA }}
