@@ -85,6 +85,14 @@ docker compose pull
 docker compose up
 ```
 
+To stop it:
+
+```bash
+docker compose down
+```
+
+If you ran the image with `docker run` in the foreground, stop it with `Ctrl+C`.
+
 Open:
 
 - `http://localhost:8080`
