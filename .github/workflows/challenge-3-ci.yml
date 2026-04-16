@@ -1,0 +1,67 @@
+name: Challenge 3 - CI (Nginx)
+
+on:
+  push:
+    paths:
+      - "challenge-3-cicd-nginx/index.html"
+      - "challenge-3-cicd-nginx/Dockerfile"
+      - ".github/workflows/challenge-3-ci.yml"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute image tag
+        run: |
+          echo "SHORT_SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./challenge-3-cicd-nginx
+          load: true
+          push: false
+          tags: challenge-3-nginx:ci
+
+      - name: Smoke test (run and curl)
+        run: |
+          docker run -d --rm --name challenge-3-nginx-test -p 8080:80 challenge-3-nginx:ci
+          for i in {1..20}; do
+            if curl -fsS http://localhost:8080 >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl -fsSI http://localhost:8080 | head -n 1 | grep -q "200"
+          curl -fsSI http://localhost:8080 | grep -i -q "^server: nginx"
+          docker stop challenge-3-nginx-test
+
+      - name: Build and push (latest)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./challenge-3-cicd-nginx
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/challenge-3-nginx:latest
+            ghcr.io/${{ github.repository }}/challenge-3-nginx:sha-${{ env.SHORT_SHA }}

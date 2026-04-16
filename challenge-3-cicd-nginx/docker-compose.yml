@@ -1,0 +1,5 @@
+services:
+  web:
+    image: ghcr.io/${GITHUB_REPOSITORY}/challenge-3-nginx
+    ports:
+      - "8080:80"
